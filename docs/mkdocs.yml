@@ -1,0 +1,39 @@
+site_name: "pdm-venv"
+site_description: "A plugin for pdm that enables virtualenv management"
+site_url: "https://pdm-project.github.io/pdm-venv"
+repo_url: "https://github.com/pdm-project/pdm-venv"
+repo_name: "pdm-project/pdm-venv"
+site_dir: "site"
+
+nav:
+  - Home:
+    - Overview: index.md
+    - Changelog: changelog.md
+  - Development:
+    - Contributing: contributing.md
+    - Code of Conduct: code_of_conduct.md
+
+theme:
+  name: material
+  palette:
+    primary: deep purple
+    accent: teal
+  font:
+    text: Open Sans
+    code: Fira Code
+
+
+markdown_extensions:
+  - admonition
+  - pymdownx.emoji
+  - pymdownx.magiclink
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+  - toc:
+      permalink: "#"
+
+plugins:
+  - search
