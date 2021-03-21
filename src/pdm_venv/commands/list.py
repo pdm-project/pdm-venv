@@ -1,7 +1,7 @@
 import argparse
 
+from pdm import termui
 from pdm.cli.commands.base import BaseCommand
-from pdm.iostream import stream
 from pdm.project import Project
 
 from pdm_venv.utils import iter_venvs
@@ -13,6 +13,6 @@ class ListCommand(BaseCommand):
     arguments = []
 
     def handle(self, project: Project, options: argparse.Namespace) -> None:
-        stream.echo("Virtualenvs created with this project:")
+        project.core.ui.echo("Virtualenvs created with this project:\n")
         for ident, venv in iter_venvs(project):
-            stream.echo(f"{stream.green(ident)}: {venv}")
+            project.core.ui.echo(f"  {termui.green(ident)}: {venv}")

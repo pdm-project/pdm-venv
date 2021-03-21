@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Mapping, Optional, Tuple, Type
 
 from pdm.exceptions import ProjectError
-from pdm.iostream import stream
 from pdm.project import Project
 from pythonfinder import Finder
 
@@ -39,13 +38,14 @@ class Backend(abc.ABC):
             return hash_path(python)
         return python
 
-    @staticmethod
-    def _ensure_clean(location: Path, force: bool = False) -> None:
+    def _ensure_clean(self, location: Path, force: bool = False) -> None:
         if not location.exists():
             return
         if not force:
             raise VirtualenvCreateError(f"The location {location} is not empty")
-        stream.echo(f"Cleaning existing target directory {location}", err=True)
+        self.project.core.ui.echo(
+            f"Cleaning existing target directory {location}", err=True
+        )
         shutil.rmtree(location)
 
     @property

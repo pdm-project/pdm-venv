@@ -2,9 +2,8 @@ import argparse
 import shutil
 
 import click
-from pdm import project
+from pdm import project, termui
 from pdm.cli.commands.base import BaseCommand
-from pdm.iostream import stream
 
 from pdm_venv.utils import iter_venvs
 
@@ -24,16 +23,16 @@ class RemoveCommand(BaseCommand):
         parser.add_argument("env", help="The key of the virtualenv")
 
     def handle(self, project: project, options: argparse.Namespace) -> None:
-        stream.echo("Virtualenvs created with this project:")
+        project.core.ui.echo("Virtualenvs created with this project:")
         for ident, venv in iter_venvs(project):
             if ident == options.env:
                 if options.yes or click.confirm(f"Will remove: {venv}, continue?"):
                     shutil.rmtree(venv)
-                    stream.echo("Removed successfully!")
+                    project.core.ui.echo("Removed successfully!")
                 break
         else:
-            stream.echo(
-                stream.yellow(f"No virtualenv with key {options.env} is found"),
+            project.core.ui.echo(
+                termui.yellow(f"No virtualenv with key {options.env} is found"),
                 err=True,
             )
             raise SystemExit(1)

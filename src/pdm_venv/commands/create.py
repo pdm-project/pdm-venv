@@ -1,6 +1,6 @@
 import argparse
 
-from pdm import BaseCommand, Project, stream
+from pdm import BaseCommand, Project
 
 from pdm_venv.backends import BACKENDS
 
@@ -43,4 +43,4 @@ class CreateCommand(BaseCommand):
         backend: str = options.backend or project.config["venv.backend"]
         venv_backend = BACKENDS[backend](project, options.python)
         path = venv_backend.create(options.venv_args, options.force)
-        stream.echo(f"Virtualenv {path} is created successfully")
+        project.core.ui.echo(f"Virtualenv {path} is created successfully")

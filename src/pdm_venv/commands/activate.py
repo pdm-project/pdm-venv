@@ -3,8 +3,8 @@ import sys
 from pathlib import Path
 
 import shellingham
+from pdm import termui
 from pdm.cli.commands.base import BaseCommand
-from pdm.iostream import stream
 from pdm.project import Project
 from pdm.utils import is_venv_python
 
@@ -25,8 +25,8 @@ class ActivateCommand(BaseCommand):
                 (venv for key, venv in iter_venvs(project) if key == options.env), None
             )
             if not venv:
-                stream.echo(
-                    stream.yellow(f"No virtualenv with key {options.env} is found"),
+                project.core.ui.echo(
+                    termui.yellow(f"No virtualenv with key {options.env} is found"),
                     err=True,
                 )
                 raise SystemExit(1)
@@ -36,16 +36,16 @@ class ActivateCommand(BaseCommand):
             if is_venv_python(interpreter):
                 venv = Path(interpreter).parent.parent
             else:
-                stream.echo(
-                    stream.yellow(
+                project.core.ui.echo(
+                    termui.yellow(
                         f"Can't activate a non-venv Python{interpreter}, "
                         "you can specify one with pdm venv activate <env_name>"
                     )
                 )
                 raise SystemExit(1)
-        self.print_activate_command(venv)
+        project.core.ui.echo(self.get_activate_command(venv))
 
-    def print_activate_command(self, venv: Path) -> None:
+    def get_activate_command(self, venv: Path) -> str:
         shell, _ = shellingham.detect_shell()
         bin_dir = "Scripts" if sys.platform == "win32" else "bin"
         if shell == "fish":
@@ -56,4 +56,4 @@ class ActivateCommand(BaseCommand):
             filename = "Activate.ps1"
         else:
             filename = "activate"
-        stream.echo(str(venv / bin_dir / filename))
+        return str(venv / bin_dir / filename)
