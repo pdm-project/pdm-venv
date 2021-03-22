@@ -1,0 +1,32 @@
+from pdm_venv.backends import CondaBackend, VenvBackend, VirtualenvBackend
+import sys
+
+
+def test_virtualenv_backend_create(project, mocker):
+    interpreter = project.python_executable
+    backend = VirtualenvBackend(project, None)
+    assert backend.ident
+    mock_call = mocker.patch("subprocess.check_call")
+    location = backend.create()
+    mock_call.assert_called_once_with(
+        [sys.executable, "-m", "virtualenv", location, "-p", interpreter]
+    )
+
+
+def test_venv_backend_create(project, mocker):
+    interpreter = project.python_executable
+    backend = VenvBackend(project, None)
+    assert backend.ident
+    mock_call = mocker.patch("subprocess.check_call")
+    location = backend.create()
+    mock_call.assert_called_once_with([interpreter, "-m", "venv", location])
+
+
+def test_conda_backend_create(project, mocker):
+    backend = CondaBackend(project, "3.8")
+    assert backend.ident
+    mock_call = mocker.patch("subprocess.check_call")
+    location = backend.create()
+    mock_call.assert_called_once_with(
+        ["conda", "create", "--yes", "--prefix", location, "pip", "python=3.8"]
+    )

@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 from pdm import termui
 from pdm.cli.commands.base import BaseCommand
@@ -15,4 +16,9 @@ class ListCommand(BaseCommand):
     def handle(self, project: Project, options: argparse.Namespace) -> None:
         project.core.ui.echo("Virtualenvs created with this project:\n")
         for ident, venv in iter_venvs(project):
-            project.core.ui.echo(f"  {termui.green(ident)}: {venv}")
+            saved_python = project.project_config.get("python.path")
+            if saved_python and Path(saved_python).parent.parent == venv:
+                mark = "*"
+            else:
+                mark = "-"
+            project.core.ui.echo(f"{mark}  {termui.green(ident)}: {venv}")

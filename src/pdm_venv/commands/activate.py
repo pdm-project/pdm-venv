@@ -1,5 +1,4 @@
 import argparse
-import sys
 from pathlib import Path
 
 import shellingham
@@ -8,7 +7,7 @@ from pdm.cli.commands.base import BaseCommand
 from pdm.project import Project
 from pdm.utils import is_venv_python
 
-from pdm_venv.utils import iter_venvs
+from pdm_venv.utils import iter_venvs, BIN_DIR
 
 
 class ActivateCommand(BaseCommand):
@@ -47,7 +46,6 @@ class ActivateCommand(BaseCommand):
 
     def get_activate_command(self, venv: Path) -> str:
         shell, _ = shellingham.detect_shell()
-        bin_dir = "Scripts" if sys.platform == "win32" else "bin"
         if shell == "fish":
             filename = "activate.fish"
         elif shell == "csh":
@@ -56,4 +54,4 @@ class ActivateCommand(BaseCommand):
             filename = "Activate.ps1"
         else:
             filename = "activate"
-        return str(venv / bin_dir / filename)
+        return str(venv / BIN_DIR / filename)

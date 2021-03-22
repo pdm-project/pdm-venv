@@ -1,14 +1,79 @@
+import os
+from typing import Iterable
 from pdm import Project as PdmProject
 from pdm.core import Core
-from pdm.models.environment import Environment
+from pdm.models.environment import Environment, GlobalEnvironment
+from pdm.models.in_process import get_python_version
+from pdm.models.specifiers import PySpecSet
+from pdm.utils import is_venv_python
+from pdm_venv.backends import BACKENDS
+from pdm import termui
+from pythonfinder.models.python import PythonVersion
 
 from pdm_venv.commands import VenvCommand
 from pdm_venv.config import venv_configs
+from pdm_venv.utils import iter_venvs, BIN_DIR, IS_WIN
 
 
 class Project(PdmProject):
+    def find_interpreters(self, python_spec: str) -> Iterable[str]:
+        suffix = ".exe" if IS_WIN else ""
+        if not os.path.exists(python_spec):
+            for _, venv in iter_venvs(self):
+                python = (venv / BIN_DIR / f"python{suffix}").as_posix()
+                if all(d.isdigit() for d in python_spec.split(".")):
+                    py_version = PythonVersion.from_path(python)
+                    if py_version.matches(*(int(d) for d in python_spec.split("."))):
+                        yield python
+                else:
+                    yield python
+
+        yield from super().find_interpreters(python_spec)
+
     def get_environment(self) -> Environment:
-        return super().get_environment()
+        if self.is_global:
+            env = GlobalEnvironment(self)
+            # Rewrite global project's python requires to be
+            # compatible with the exact version
+            env.python_requires = PySpecSet(
+                "==" + get_python_version(self.python_executable, True)[0]
+            )
+            return env
+        if self.config["use_venv"]:
+            if self.project_config.get("python.path") and not os.getenv(
+                "PDM_IGNORE_SAVED_PYTHON"
+            ):
+                return (
+                    GlobalEnvironment(self)
+                    if is_venv_python(self.python_executable)
+                    else Environment(self)
+                )
+            existing_venv = next((venv for _, venv in iter_venvs(self)), None)
+            if existing_venv:
+                self.core.ui.echo(
+                    f"Virtualenv {termui.green(str(existing_venv))} is reused.",
+                    err=True,
+                )
+                path = existing_venv
+            else:
+                # Create a virtualenv using the selected Python interpreter
+                self.core.ui.echo(
+                    "use_venv is on, creating a virtualenv for this project...",
+                    fg="yellow",
+                    err=True,
+                )
+                backend: str = self.config["venv.backend"]
+                venv_backend = BACKENDS[backend](self, None)
+                path = venv_backend.create(None, (), False)
+                self.core.ui.echo(f"Virtualenv {path} is created successfully")
+            suffix = ".exe" if IS_WIN else ""
+            self.project_config["python.path"] = (
+                path / BIN_DIR / f"python{suffix}"
+            ).as_posix()
+            self._python_executable = None
+            return GlobalEnvironment(self)
+        else:
+            return Environment(self)
 
 
 def entry_point(core: Core) -> None:

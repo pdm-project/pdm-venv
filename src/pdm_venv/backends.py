@@ -7,10 +7,12 @@ from pathlib import Path
 from typing import Mapping, Optional, Tuple, Type
 
 from pdm.exceptions import ProjectError
-from pdm.project import Project
+from pdm import Project
+from pdm.utils import cached_property, get_python_version_string
 from pythonfinder import Finder
+from pdm.models.in_process import get_python_version
 
-from pdm_venv.utils import hash_path
+from pdm_venv.utils import get_venv_prefix
 
 
 class VirtualenvCreateError(ProjectError):
@@ -24,6 +26,18 @@ class Backend(abc.ABC):
         self.project = project
         self.python = python
 
+    @cached_property
+    def _resolved_interpreter(self) -> str:
+        if not self.python:
+            return self.project.python_executable
+        if os.path.isabs(self.python):
+            return self.python
+        finder = Finder()
+        result = finder.find_python_version(self.python)
+        if not result:
+            raise VirtualenvCreateError(f"Can't find python interpreter {self.python}")
+        return result.path.as_posix()
+
     @property
     def ident(self) -> str:
         """Get the identifier of this virtualenv.
@@ -33,10 +47,8 @@ class Backend(abc.ABC):
             3.9.0a4
             python3.8
         """
-        python = self.python or "python"
-        if os.path.isabs(python):
-            return hash_path(python)
-        return python
+        python_version, is_64bit = get_python_version(self._resolved_interpreter, True)
+        return get_python_version_string(python_version, is_64bit)
 
     def _ensure_clean(self, location: Path, force: bool = False) -> None:
         if not location.exists():
@@ -48,23 +60,19 @@ class Backend(abc.ABC):
         )
         shutil.rmtree(location)
 
-    @property
-    def name(self) -> str:
-        return (
-            f"{self.project.root.name}-{hash_path(self.project.root.as_posix())}"
-            f"-{self.ident}"
-        )
-
-    def get_location(self) -> Path:
+    def get_location(self, name: Optional[str]) -> Path:
         venv_parent = Path(self.project.config["venv.location"])
         if not venv_parent.is_dir():
             venv_parent.mkdir(exist_ok=True, parents=True)
-        return venv_parent / self.name
+        return venv_parent / f"{get_venv_prefix(self.project)}{name or self.ident}"
 
-    def create(self, args: Tuple[str] = (), force: bool = False) -> Path:
-        location = self.get_location()
+    def create(
+        self, name: Optional[str] = None, args: Tuple[str] = (), force: bool = False
+    ) -> Path:
+        location = self.get_location(name)
         self._ensure_clean(location, force)
-        return self.perform_create(location, args)
+        self.perform_create(location, args)
+        return location
 
     @abc.abstractmethod
     def perform_create(self, location: Path, args: Tuple[str] = ()) -> Path:
@@ -72,23 +80,9 @@ class Backend(abc.ABC):
 
 
 class VirtualenvBackend(Backend):
-    @property
-    def _resolved_interpreter(self) -> str:
-        if os.path.isabs(self.python or ""):
-            return self.python
-        finder = Finder()
-        result = finder.find_python_version(self.python)
-        if not result:
-            raise VirtualenvCreateError(f"Can't find python interpreter {self.python}")
-        return result.path.as_posix()
-
     def perform_create(self, location: Path, args: Tuple[str] = ()) -> Path:
         cmd = [sys.executable, "-m", "virtualenv", location]
-        if self.python:
-            interpreter = self._resolved_interpreter
-        else:
-            interpreter = self.project.python_executable
-        cmd.extend(["-p", interpreter])
+        cmd.extend(["-p", self._resolved_interpreter])
         cmd.extend(args)
         try:
             subprocess.check_call(cmd)
@@ -98,11 +92,7 @@ class VirtualenvBackend(Backend):
 
 class VenvBackend(VirtualenvBackend):
     def perform_create(self, location: Path, args: Tuple[str]) -> Path:
-        if self.python:
-            interpreter = self._resolved_interpreter
-        else:
-            interpreter = self.project.python_executable
-        cmd = [interpreter, "-m", "venv", location] + list(args)
+        cmd = [self._resolved_interpreter, "-m", "venv", location] + list(args)
         try:
             subprocess.check_call(cmd)
         except subprocess.CalledProcessError as e:
@@ -128,6 +118,10 @@ class CondaBackend(Backend):
         else:
             python_dep = "python"
         cmd.append(python_dep)
+        try:
+            subprocess.check_call(cmd)
+        except subprocess.CalledProcessError as e:
+            raise VirtualenvCreateError(e) from None
 
 
 BACKENDS: Mapping[str, Type[Backend]] = {

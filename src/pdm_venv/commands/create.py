@@ -26,8 +26,9 @@ class CreateCommand(BaseCommand):
             "-f",
             "--force",
             action="store_true",
-            help="Clean the target location in case it already exists",
+            help="Recreate if the virtualenv already exists",
         )
+        parser.add_argument("-n", "--name", help="Specify the name of the virtualenv")
         parser.add_argument(
             "python",
             nargs="?",
@@ -42,5 +43,5 @@ class CreateCommand(BaseCommand):
     def handle(self, project: Project, options: argparse.Namespace) -> None:
         backend: str = options.backend or project.config["venv.backend"]
         venv_backend = BACKENDS[backend](project, options.python)
-        path = venv_backend.create(options.venv_args, options.force)
+        path = venv_backend.create(options.name, options.venv_args, options.force)
         project.core.ui.echo(f"Virtualenv {path} is created successfully")
