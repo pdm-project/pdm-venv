@@ -4,10 +4,10 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Mapping, Optional, Tuple, Type
+from typing import List, Mapping, Optional, Tuple, Type
 
 from pdm.exceptions import ProjectError
-from pdm import Project
+from pdm import Project, termui
 from pdm.utils import cached_property, get_python_version_string
 from pythonfinder import Finder
 from pdm.models.in_process import get_python_version
@@ -50,6 +50,13 @@ class Backend(abc.ABC):
         python_version, is_64bit = get_python_version(self._resolved_interpreter, True)
         return get_python_version_string(python_version, is_64bit)
 
+    def subprocess_call(self, cmd: List[str], **kwargs) -> None:
+        self.project.core.ui.echo(f"Run command: {cmd}", verbosity=termui.DETAIL)
+        try:
+            subprocess.check_call(cmd)
+        except subprocess.CalledProcessError as e:
+            raise VirtualenvCreateError(e) from None
+
     def _ensure_clean(self, location: Path, force: bool = False) -> None:
         if not location.exists():
             return
@@ -84,19 +91,13 @@ class VirtualenvBackend(Backend):
         cmd = [sys.executable, "-m", "virtualenv", location]
         cmd.extend(["-p", self._resolved_interpreter])
         cmd.extend(args)
-        try:
-            subprocess.check_call(cmd)
-        except subprocess.CalledProcessError as e:
-            raise VirtualenvCreateError(e) from None
+        self.subprocess_call(cmd)
 
 
 class VenvBackend(VirtualenvBackend):
     def perform_create(self, location: Path, args: Tuple[str]) -> Path:
         cmd = [self._resolved_interpreter, "-m", "venv", location] + list(args)
-        try:
-            subprocess.check_call(cmd)
-        except subprocess.CalledProcessError as e:
-            raise VirtualenvCreateError(e) from None
+        self.subprocess_call(cmd)
 
 
 class CondaBackend(Backend):
@@ -118,10 +119,7 @@ class CondaBackend(Backend):
         else:
             python_dep = "python"
         cmd.append(python_dep)
-        try:
-            subprocess.check_call(cmd)
-        except subprocess.CalledProcessError as e:
-            raise VirtualenvCreateError(e) from None
+        self.subprocess_call(cmd)
 
 
 BACKENDS: Mapping[str, Type[Backend]] = {

@@ -1,6 +1,7 @@
 import argparse
 
-from pdm import BaseCommand, Project
+from pdm import BaseCommand, Project, termui
+from pdm.cli.options import verbose_option
 
 from pdm_venv.backends import BACKENDS
 
@@ -12,7 +13,7 @@ class CreateCommand(BaseCommand):
     """
 
     description = "Create a virtualenv"
-    arguments = []
+    arguments = [verbose_option]
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
@@ -43,5 +44,10 @@ class CreateCommand(BaseCommand):
     def handle(self, project: Project, options: argparse.Namespace) -> None:
         backend: str = options.backend or project.config["venv.backend"]
         venv_backend = BACKENDS[backend](project, options.python)
-        path = venv_backend.create(options.name, options.venv_args, options.force)
-        project.core.ui.echo(f"Virtualenv {path} is created successfully")
+        with project.core.ui.open_spinner(
+            f"Creating virtualenv using {backend}..."
+        ) as spinner:
+            path = venv_backend.create(options.name, options.venv_args, options.force)
+            spinner.succeed(
+                f"Virtualenv {termui.green(str(path))} is created successfully"
+            )

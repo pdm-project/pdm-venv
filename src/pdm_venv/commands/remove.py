@@ -5,6 +5,7 @@ import click
 from pathlib import Path
 from pdm import Project, termui
 from pdm.cli.commands.base import BaseCommand
+from pdm.cli.options import verbose_option
 
 from pdm_venv.utils import iter_venvs
 
@@ -12,7 +13,7 @@ from pdm_venv.utils import iter_venvs
 class RemoveCommand(BaseCommand):
     """Remove the virtualenv with the given name"""
 
-    arguments = []
+    arguments = [verbose_option]
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(

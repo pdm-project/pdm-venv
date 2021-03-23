@@ -1,5 +1,6 @@
 import argparse
 
+from pdm import Project
 from pdm.cli.commands.base import BaseCommand
 
 from pdm_venv.commands.activate import ActivateCommand
@@ -12,6 +13,7 @@ class VenvCommand(BaseCommand):
     """Virtualenv management"""
 
     name = "venv"
+    arguments = []
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         subparser = parser.add_subparsers()
@@ -19,3 +21,7 @@ class VenvCommand(BaseCommand):
         ListCommand.register_to(subparser, "list")
         RemoveCommand.register_to(subparser, "remove")
         ActivateCommand.register_to(subparser, "activate")
+        self.parser = parser
+
+    def handle(self, project: Project, options: argparse.Namespace) -> None:
+        self.parser.print_help()
