@@ -13,13 +13,19 @@ pdm-venv requires Python>=3.7
 
 ## Installation
 
-It is recommended to install with `pipx`, if `pipx` haven't been installed yet, refer to the [pipx's docs](https://github.com/pipxproject/pipx)
+If `pdm` is installed via [pipx](https://github.com/pipxproject/pipx)(the recommended way), run:
 
 ```bash
 $ pipx inject pdm pdm-venv
 ```
 
-Alternatively, install with `pip` to the user site:
+Otherwise if `pdm` is installed via Homebrew, run:
+
+```bash
+$ $(brew --prefix pdm)/libexec/bin/pip install pdm-venv
+```
+
+Or install with `pip` to the user site:
 
 ```bash
 $ python -m pip install --user pdm-venv
