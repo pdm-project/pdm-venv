@@ -1,5 +1,6 @@
-from pdm_venv.backends import CondaBackend, VenvBackend, VirtualenvBackend
 import sys
+
+from pdm_venv.backends import CondaBackend, VenvBackend, VirtualenvBackend
 
 
 def test_virtualenv_backend_create(project, mocker):

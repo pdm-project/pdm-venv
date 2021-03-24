@@ -1,11 +1,13 @@
 """Configuration for the pytest test suite."""
 import functools
 import os
+
 import pytest
 from click.testing import CliRunner
 from pdm.core import Core
-from pdm_venv.plugin import Project
 from pdm.utils import cd
+
+from pdm_venv.plugin import Project
 
 DUMMY_PYPROJECT = """[project]
 requires-python = ">=3.6"

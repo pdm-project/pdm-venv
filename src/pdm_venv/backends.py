@@ -6,11 +6,11 @@ import sys
 from pathlib import Path
 from typing import List, Mapping, Optional, Tuple, Type
 
-from pdm.exceptions import ProjectError
 from pdm import Project, termui
+from pdm.exceptions import ProjectError
+from pdm.models.in_process import get_python_version
 from pdm.utils import cached_property, get_python_version_string
 from pythonfinder import Finder
-from pdm.models.in_process import get_python_version
 
 from pdm_venv.utils import get_venv_prefix
 

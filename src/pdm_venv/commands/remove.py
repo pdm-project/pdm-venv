@@ -1,8 +1,8 @@
 import argparse
 import shutil
+from pathlib import Path
 
 import click
-from pathlib import Path
 from pdm import Project, termui
 from pdm.cli.commands.base import BaseCommand
 from pdm.cli.options import verbose_option

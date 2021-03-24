@@ -1,18 +1,19 @@
 import os
 from typing import Iterable, Optional
+
 from pdm import Project as PdmProject
+from pdm import termui
 from pdm.core import Core
 from pdm.models.environment import Environment, GlobalEnvironment
 from pdm.models.in_process import get_python_version
 from pdm.models.specifiers import PySpecSet
 from pdm.utils import is_venv_python
-from pdm_venv.backends import BACKENDS
-from pdm import termui
 from pythonfinder.models.python import PythonVersion
 
+from pdm_venv.backends import BACKENDS
 from pdm_venv.commands import VenvCommand
 from pdm_venv.config import venv_configs
-from pdm_venv.utils import iter_venvs, BIN_DIR, IS_WIN
+from pdm_venv.utils import BIN_DIR, IS_WIN, iter_venvs
 
 
 class Project(PdmProject):
