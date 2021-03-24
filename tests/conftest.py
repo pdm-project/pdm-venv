@@ -36,10 +36,11 @@ def project(isolated):
 
 
 @pytest.fixture
-def invoke(isolated):
+def invoke(isolated, monkeypatch):
     runner = CliRunner(mix_stderr=False)
     core = Core()
     invoker = functools.partial(runner.invoke, core, prog_name="pdm")
+    monkeypatch.delenv("PDM_IGNORE_SAVED_PYTHON", raising=False)
     with cd(isolated):
         invoker(["config", "venv.location", str(isolated / "venvs")])
         invoker(["config", "venv.backend", os.getenv("VENV_BACKEND", "virtualenv")])
