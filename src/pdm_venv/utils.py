@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Iterable, Tuple
 
 from pdm.project import Project
-from pdm.utils import get_venv_python
+from pdm.utils import get_in_project_venv_python
 
 IS_WIN = sys.platform == "win32"
 BIN_DIR = "Scripts" if IS_WIN else "bin"
@@ -25,7 +25,7 @@ def get_venv_prefix(project: Project) -> str:
 
 def iter_venvs(project: Project) -> Iterable[Tuple[str, Path]]:
     """Return an iterable of venv paths associated with the project"""
-    in_project_venv_python = get_venv_python(project.root)
+    in_project_venv_python = get_in_project_venv_python(project.root)
     if in_project_venv_python is not None:
         yield "in-project", Path(in_project_venv_python).parent.parent
     venv_prefix = get_venv_prefix(project)

@@ -1,5 +1,5 @@
 import os
-from typing import Iterable
+from typing import Iterable, Optional
 from pdm import Project as PdmProject
 from pdm.core import Core
 from pdm.models.environment import Environment, GlobalEnvironment
@@ -16,17 +16,20 @@ from pdm_venv.utils import iter_venvs, BIN_DIR, IS_WIN
 
 
 class Project(PdmProject):
-    def find_interpreters(self, python_spec: str) -> Iterable[str]:
+    def find_interpreters(
+        self, python_spec: Optional[str] = None
+    ) -> Iterable[PythonVersion]:
+        PythonVersion.__hash__ = lambda self: hash(self.executable)
         suffix = ".exe" if IS_WIN else ""
-        if not os.path.exists(python_spec):
-            for _, venv in iter_venvs(self):
-                python = (venv / BIN_DIR / f"python{suffix}").as_posix()
-                if all(d.isdigit() for d in python_spec.split(".")):
-                    py_version = PythonVersion.from_path(python)
-                    if py_version.matches(*(int(d) for d in python_spec.split("."))):
-                        yield python
-                else:
-                    yield python
+
+        for _, venv in iter_venvs(self):
+            python = (venv / BIN_DIR / f"python{suffix}").as_posix()
+            py_version = PythonVersion.from_path(python)
+            if not python_spec:
+                yield py_version
+            elif all(d.isdigit() for d in python_spec.split(".")):
+                if py_version.matches(*(int(d) for d in python_spec.split("."))):
+                    yield py_version
 
         yield from super().find_interpreters(python_spec)
 

@@ -16,7 +16,7 @@ pdm-venv requires Python>=3.7
 It is recommended to install with `pipx`, if `pipx` haven't been installed yet, refer to the [pipx's docs](https://github.com/pipxproject/pipx)
 
 ```bash
-$ pipx install pdm-venv
+$ pipx inject pdm pdm-venv
 ```
 
 Alternatively, install with `pip` to the user site:
@@ -24,3 +24,73 @@ Alternatively, install with `pip` to the user site:
 ```bash
 $ python -m pip install --user pdm-venv
 ```
+
+Note that `pdm-venv` must be installed to the same environment as `pdm`.
+
+## Usage
+
+`pdm-venv` enhances `pdm`'s CLI with the support of virtualenv creation and management. With `pdm-venv` installed,
+the default value of `use_venv` will turn to `True`, you can disable the whole plugin by `pdm config use_venv false`.
+
+### Create a virtualenv
+
+```bash
+# Create a virtualenv based on 3.8 interpreter
+$ pdm venv create 3.8
+# Assign a different name other than the version string
+$ pdm venv create --name for-test 3.8
+# Use venv as the backend to create, support 3 backends: virtualenv(default), venv, conda
+$ pdm venv create --with venv 3.9
+```
+
+### List all virtualenv created with this project
+
+```console
+$ pdm venv list
+Virtualenvs created with this project:
+
+-  3.8.6: C:\Users\Frost Ming\AppData\Local\pdm\pdm\venvs\test-project-8Sgn_62n-3.8.6
+-  for-test: C:\Users\Frost Ming\AppData\Local\pdm\pdm\venvs\test-project-8Sgn_62n-for-test
+-  3.9.1: C:\Users\Frost Ming\AppData\Local\pdm\pdm\venvs\test-project-8Sgn_62n-3.9.1
+```
+
+The name before the colon(:) is the key of the virtualenv which is used in `remove` and `activate` commands below.
+
+### Remove a virtualenv
+
+```console
+$ pdm venv remove for-test
+Virtualenvs created with this project:
+Will remove: C:\Users\Frost Ming\AppData\Local\pdm\pdm\venvs\test-project-8Sgn_62n-for-test, continue? [y/N]:y
+Removed C:\Users\Frost Ming\AppData\Local\pdm\pdm\venvs\test-project-8Sgn_62n-for-test
+```
+
+### Activate a virtualenv
+
+Instead of spawning a subshell like what `pipenv` and `poetry` do, `pdm-venv` doesn't create the shell for you but print the activate command to the console.
+In this way you won't lose the fancy shell features. You can then feed the output to `source` command to activate the virtualenv without leaving the current shell:
+
+```console
+$ . "$(pdm venv activate for-test)"
+(test-project-8Sgn_62n-for-test) $  # Virtualenv entered
+```
+
+You can make your own shell shortcut function to avoid the input of long command.
+
+Additionally, if the saved Python interpreter is a venv Python, you can omit the name argument of `activate`.
+
+### Switch Python interpreter
+
+When `pdm-venv` is enabled, Python interpreters associated with the venvs will also show in the interpreter list of `pdm use` or `pdm init` command.
+
+### Virtualenv auto creation
+
+If no Python interpreter is selected for the project, `pdm-venv` will take charge to create on for you and select the venv interpreter automatically, just like
+what `pipenv` and `poetry` do.
+
+## Configuration
+
+| Config Item     | Description                                   | Default Value                       | Available in Project | Env var |
+| --------------- | --------------------------------------------- | ----------------------------------- | -------------------- | ------- |
+| `venv.location` | The root directory to store virtualenvs       | `appdirs.user_data_dir() / "venvs"` | No                   |         |
+| `venv.backend`  | The default backend used to create virtualenv | virtualenv                          | No                   |         |
