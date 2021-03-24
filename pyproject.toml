@@ -7,7 +7,7 @@ name = "pdm-venv"
 version = {use_scm = true}
 description = "A plugin for pdm that enables virtualenv management"
 authors = [
-    {name = "Frost Ming", email = "<mianghong@gmail.com>"}
+    {name = "Frost Ming", email = "mianghong@gmail.com"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
@@ -33,6 +33,7 @@ classifiers = [
 [project.urls]
 Repository = "https://github.com/pdm-project/pdm-venv"
 Homepage = "https://github.com/pdm-project/pdm-venv"
+Documentation = "https://pdm-project.github.io/pdm-venv"
 
 [project.optional-dependencies]
 doc = [
