@@ -16,7 +16,7 @@ def test_iter_project_venvs(project):
         / f"python{'.exe' if utils.IS_WIN else ''}"
     ).touch()
     key_venvs = list(utils.iter_venvs(project))
-    assert key_venvs[0][0] == "in-project"
-    assert key_venvs[1][0] == "bar"
-    assert key_venvs[2][0] == "baz"
-    assert key_venvs[3][0] == "foo"
+    assert key_venvs[0][0] == "in-project", key_venvs
+    assert key_venvs[1][0] == "bar", key_venvs
+    assert key_venvs[2][0] == "baz", key_venvs
+    assert key_venvs[3][0] == "foo", key_venvs

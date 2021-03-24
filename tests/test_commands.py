@@ -63,3 +63,9 @@ def test_venv_activate(invoke, mocker):
     result = invoke(["venv", "activate", key])
     assert result.exit_code == 0, result.stderr
     assert "activate" in result.output.lower()
+
+
+def test_venv_auto_create(invoke, mocker):
+    creator = mocker.patch("pdm_venv.backends.Backend.create")
+    invoke(["install"])
+    creator.assert_called_once()
