@@ -26,4 +26,4 @@ def test_find_interpreters_from_venv(invoke, isolated):
     venv_path = next(venv_parent.iterdir(), None)
 
     project = Project(isolated)
-    assert Path(next(project.find_interpreters("python"))).relative_to(venv_path)
+    assert next(project.find_interpreters()).comes_from.path.relative_to(venv_path)

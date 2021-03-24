@@ -39,6 +39,10 @@ def project(isolated):
 def invoke(isolated):
     runner = CliRunner(mix_stderr=False)
     core = Core()
+    invoker = functools.partial(runner.invoke, core, prog_name="pdm")
     with cd(isolated):
-        (isolated / ".pdm.toml").unlink(True)
-        yield functools.partial(runner.invoke, core, prog_name="pdm")
+        invoker(["config", "venv.location", str(isolated / "venvs")])
+        invoker(["config", "venv.backend", os.getenv("VENV_BACKEND", "virtualenv")])
+        if (isolated / ".pdm.toml").exists():
+            (isolated / ".pdm.toml").unlink()
+        yield invoker
