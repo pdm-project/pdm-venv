@@ -41,6 +41,7 @@ def test_venv_remove(invoke):
 
 
 def test_venv_recreate(invoke):
+    invoke(["use", "-f", "python"])
     result = invoke(["venv", "create"])
     assert result.exit_code == 0, result.stderr
 
