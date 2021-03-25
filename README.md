@@ -89,6 +89,8 @@ Additionally, if the saved Python interpreter is a venv Python, you can omit the
 
 When `pdm-venv` is enabled, Python interpreters associated with the venvs will also show in the interpreter list of `pdm use` or `pdm init` command.
 
+Additionally, if `pdm` detects it is inside an active virtualenv by examining `VIRTUAL_ENV` env var, it will reuse that virtualenv for later actions.
+
 ### Virtualenv auto creation
 
 If no Python interpreter is selected for the project, `pdm-venv` will take charge to create on for you and select the venv interpreter automatically, just like
