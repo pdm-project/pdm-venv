@@ -33,3 +33,9 @@ def iter_venvs(project: Project) -> Iterable[Tuple[str, Path]]:
     for venv in venv_parent.glob(f"{venv_prefix}*"):
         ident = venv.name[len(venv_prefix) :]
         yield ident, venv
+
+
+def get_venv_python(venv: Path) -> Path:
+    """Get the interpreter path inside the given venv."""
+    suffix = ".exe" if IS_WIN else ""
+    return venv / BIN_DIR / f"python{suffix}"

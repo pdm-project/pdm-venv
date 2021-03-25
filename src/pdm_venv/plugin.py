@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Iterable, Optional
 
 from pdm import Project as PdmProject
@@ -13,7 +14,7 @@ from pythonfinder.models.python import PythonVersion
 from pdm_venv.backends import BACKENDS
 from pdm_venv.commands import VenvCommand
 from pdm_venv.config import venv_configs
-from pdm_venv.utils import BIN_DIR, IS_WIN, iter_venvs
+from pdm_venv.utils import get_venv_python, iter_venvs
 
 
 class Project(PdmProject):
@@ -21,10 +22,9 @@ class Project(PdmProject):
         self, python_spec: Optional[str] = None
     ) -> Iterable[PythonVersion]:
         PythonVersion.__hash__ = lambda self: hash(self.executable)
-        suffix = ".exe" if IS_WIN else ""
 
         for _, venv in iter_venvs(self):
-            python = (venv / BIN_DIR / f"python{suffix}").as_posix()
+            python = get_venv_python(venv).as_posix()
             py_version = PythonVersion.from_path(python)
             if not python_spec:
                 yield py_version
@@ -52,6 +52,15 @@ class Project(PdmProject):
                     if is_venv_python(self.python_executable)
                     else Environment(self)
                 )
+            if os.getenv("VIRTUAL_ENV"):
+                venv = os.getenv("VIRTUAL_ENV")
+                self.core.ui.echo(
+                    f"Detected inside an active virtualenv {termui.green(venv)}, "
+                    "reuse it."
+                )
+                # Temporary usage, do not save in .pdm.toml
+                self._python_executable = get_venv_python(Path(venv)).as_posix()
+                return GlobalEnvironment(self)
             existing_venv = next((venv for _, venv in iter_venvs(self)), None)
             if existing_venv:
                 self.core.ui.echo(
@@ -70,10 +79,7 @@ class Project(PdmProject):
                 venv_backend = BACKENDS[backend](self, None)
                 path = venv_backend.create(None, (), False)
                 self.core.ui.echo(f"Virtualenv {path} is created successfully")
-            suffix = ".exe" if IS_WIN else ""
-            self.project_config["python.path"] = (
-                path / BIN_DIR / f"python{suffix}"
-            ).as_posix()
+            self.project_config["python.path"] = get_venv_python(path).as_posix()
             self._python_executable = None
             return GlobalEnvironment(self)
         else:
