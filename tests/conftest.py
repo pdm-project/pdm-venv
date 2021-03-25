@@ -16,10 +16,10 @@ dependencies = []
 
 
 @pytest.fixture
-def isolated(tmp_path, mocker):
+def isolated(tmp_path, mocker, monkeypatch):
     tmp_path.joinpath("pyproject.toml").write_text(DUMMY_PYPROJECT)
     mocker.patch("pathlib.Path.home", return_value=tmp_path)
-    os.environ.pop("VIRTUAL_ENV", None)
+    monkeypatch.delenv("VIRTUAL_ENV", raising=False)
     return tmp_path
 
 
