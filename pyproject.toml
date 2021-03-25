@@ -45,7 +45,7 @@ doc = [
 venv = "pdm_venv.plugin:entry_point"
 
 [tool.pdm.scripts]
-release = "python tasks/release.py"
+release = "python -m tasks.release"
 test = "pytest tests/"
 doc = {shell = "cd docs && mkdocs serve", help = "Start the dev server for doc preview"}
 lint = "pre-commit run --all-files"
