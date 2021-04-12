@@ -1,29 +1,25 @@
 from pathlib import Path
 
-from pdm_venv.plugin import Project
-
 
 def test_use_venv_default_to_true(invoke):
     result = invoke(["config", "use_venv"])
     assert result.output.strip() == "True"
 
 
-def test_create_venv_first_time(invoke, isolated):
+def test_create_venv_first_time(invoke, project):
     result = invoke(["install"])
     assert result.exit_code == 0
-    venv_parent = isolated / "venvs"
+    venv_parent = project.root / "venvs"
     venv_path = next(venv_parent.iterdir(), None)
     assert venv_path is not None
 
-    project = Project(isolated)
     assert Path(project.project_config["python.path"]).relative_to(venv_path)
 
 
-def test_find_interpreters_from_venv(invoke, isolated):
+def test_find_interpreters_from_venv(invoke, project):
     result = invoke(["install"])
     assert result.exit_code == 0
-    venv_parent = isolated / "venvs"
+    venv_parent = project.root / "venvs"
     venv_path = next(venv_parent.iterdir(), None)
 
-    project = Project(isolated)
-    assert next(project.find_interpreters()).comes_from.path.relative_to(venv_path)
+    assert Path(next(project.find_interpreters()).executable).relative_to(venv_path)

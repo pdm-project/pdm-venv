@@ -7,8 +7,6 @@ from click.testing import CliRunner
 from pdm.core import Core
 from pdm.utils import cd
 
-from pdm_venv.plugin import Project
-
 DUMMY_PYPROJECT = """[project]
 requires-python = ">=3.6"
 dependencies = []
@@ -28,8 +26,7 @@ def project(isolated):
     core = Core()
     core.init_parser()
     core.load_plugins()
-    p = Project(isolated)
-    p.core = core
+    p = core.create_project(isolated)
     p.global_config["venv.location"] = str(isolated / "venvs")
     p.global_config["venv.backend"] = os.getenv("VENV_BACKEND", "virtualenv")
     return p

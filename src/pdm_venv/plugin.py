@@ -6,10 +6,9 @@ from pdm import Project as PdmProject
 from pdm import termui
 from pdm.core import Core
 from pdm.models.environment import Environment, GlobalEnvironment
-from pdm.models.in_process import get_python_version
+from pdm.models.python import PythonInfo
 from pdm.models.specifiers import PySpecSet
 from pdm.utils import is_venv_python
-from pythonfinder.models.python import PythonVersion
 
 from pdm_venv.backends import BACKENDS
 from pdm_venv.commands import VenvCommand
@@ -20,16 +19,16 @@ from pdm_venv.utils import get_venv_python, iter_venvs
 class Project(PdmProject):
     def find_interpreters(
         self, python_spec: Optional[str] = None
-    ) -> Iterable[PythonVersion]:
-        PythonVersion.__hash__ = lambda self: hash(self.executable)
+    ) -> Iterable[PythonInfo]:
 
         for _, venv in iter_venvs(self):
             python = get_venv_python(venv).as_posix()
-            py_version = PythonVersion.from_path(python)
+            py_version = PythonInfo.from_path(python)
             if not python_spec:
                 yield py_version
             elif all(d.isdigit() for d in python_spec.split(".")):
-                if py_version.matches(*(int(d) for d in python_spec.split("."))):
+                desired = tuple(int(d) for d in python_spec.split("."))
+                if py_version.version_tuple[: len(desired)] == desired:
                     yield py_version
 
         yield from super().find_interpreters(python_spec)
@@ -39,9 +38,7 @@ class Project(PdmProject):
             env = GlobalEnvironment(self)
             # Rewrite global project's python requires to be
             # compatible with the exact version
-            env.python_requires = PySpecSet(
-                "==" + get_python_version(self.python_executable, True)[0]
-            )
+            env.python_requires = PySpecSet(f"=={self.python.version}")
             return env
         if self.config["use_venv"]:
             if self.project_config.get("python.path") and not os.getenv(
@@ -49,7 +46,7 @@ class Project(PdmProject):
             ):
                 return (
                     GlobalEnvironment(self)
-                    if is_venv_python(self.python_executable)
+                    if is_venv_python(self.python.executable)
                     else Environment(self)
                 )
             if os.getenv("VIRTUAL_ENV"):
@@ -59,7 +56,7 @@ class Project(PdmProject):
                     "reuse it."
                 )
                 # Temporary usage, do not save in .pdm.toml
-                self._python_executable = get_venv_python(Path(venv)).as_posix()
+                self._python = PythonInfo.from_path(get_venv_python(Path(venv)))
                 return GlobalEnvironment(self)
             existing_venv = next((venv for _, venv in iter_venvs(self)), None)
             if existing_venv:
@@ -79,8 +76,7 @@ class Project(PdmProject):
                 venv_backend = BACKENDS[backend](self, None)
                 path = venv_backend.create(None, (), False)
                 self.core.ui.echo(f"Virtualenv {path} is created successfully")
-            self.project_config["python.path"] = get_venv_python(path).as_posix()
-            self._python_executable = None
+            self.python = PythonInfo.from_path(get_venv_python(path))
             return GlobalEnvironment(self)
         else:
             return Environment(self)

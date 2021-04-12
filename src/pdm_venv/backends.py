@@ -1,5 +1,4 @@
 import abc
-import os
 import shutil
 import subprocess
 import sys
@@ -8,9 +7,8 @@ from typing import List, Mapping, Optional, Tuple, Type
 
 from pdm import Project, termui
 from pdm.exceptions import ProjectError
-from pdm.models.in_process import get_python_version
-from pdm.utils import cached_property, get_python_version_string
-from pythonfinder import Finder
+from pdm.models.python import PythonInfo
+from pdm.utils import cached_property
 
 from pdm_venv.utils import get_venv_prefix
 
@@ -27,16 +25,13 @@ class Backend(abc.ABC):
         self.python = python
 
     @cached_property
-    def _resolved_interpreter(self) -> str:
+    def _resolved_interpreter(self) -> PythonInfo:
         if not self.python:
-            return self.project.python_executable
-        if os.path.isabs(self.python):
-            return self.python
-        finder = Finder()
-        result = finder.find_python_version(self.python)
-        if not result:
+            return self.project.python
+        try:
+            return next(self.project.find_interpreters(self.python))
+        except StopIteration:
             raise VirtualenvCreateError(f"Can't find python interpreter {self.python}")
-        return result.path.as_posix()
 
     @property
     def ident(self) -> str:
@@ -47,8 +42,7 @@ class Backend(abc.ABC):
             3.9.0a4
             python3.8
         """
-        python_version, is_64bit = get_python_version(self._resolved_interpreter, True)
-        return get_python_version_string(python_version, is_64bit)
+        return self._resolved_interpreter.identifier
 
     def subprocess_call(self, cmd: List[str], **kwargs) -> None:
         self.project.core.ui.echo(f"Run command: {cmd}", verbosity=termui.DETAIL)
@@ -89,14 +83,16 @@ class Backend(abc.ABC):
 class VirtualenvBackend(Backend):
     def perform_create(self, location: Path, args: Tuple[str] = ()) -> Path:
         cmd = [sys.executable, "-m", "virtualenv", location]
-        cmd.extend(["-p", self._resolved_interpreter])
+        cmd.extend(["-p", self._resolved_interpreter.executable])
         cmd.extend(args)
         self.subprocess_call(cmd)
 
 
 class VenvBackend(VirtualenvBackend):
     def perform_create(self, location: Path, args: Tuple[str]) -> Path:
-        cmd = [self._resolved_interpreter, "-m", "venv", location] + list(args)
+        cmd = [self._resolved_interpreter.executable, "-m", "venv", location] + list(
+            args
+        )
         self.subprocess_call(cmd)
 
 
