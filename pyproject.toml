@@ -11,17 +11,10 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-package-dir = "src"
 requires-python = ">=3.7"
 dependencies = [
     "virtualenv~=20.4",
-    "pdm>=1.4.3",
-]
-dev-dependencies = [
-    "pytest~=6.1",
-    "towncrier~=19.2",
-    "parver~=0.3",
-    "pytest-mock~=3.5",
+    "pdm>=1.5.0b1",
 ]
 
 dynamic = ["version", "classifiers"]
@@ -44,11 +37,22 @@ doc = [
 [project.entry-points.pdm]
 venv = "pdm_venv.plugin:entry_point"
 
+[tool.pdm]
+package-dir = "src"
+
 [tool.pdm.scripts]
 release = "python -m tasks.release"
 test = "pytest tests/"
 doc = {shell = "cd docs && mkdocs serve", help = "Start the dev server for doc preview"}
 lint = "pre-commit run --all-files"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest~=6.1",
+    "towncrier~=19.2",
+    "parver~=0.3",
+    "pytest-mock~=3.5",
+]
 
 [tool.black]
 line-length = 88

@@ -12,9 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: pdm-project/setup-pdm@v1.1
+      - uses: pdm-project/setup-pdm@main
         with:
           python-version: 3.8
+          prereleases: true
       - name: Build artifacts
         run: |
           pdm build -v
