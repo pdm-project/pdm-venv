@@ -93,12 +93,12 @@ Additionally, if `pdm` detects it is inside an active virtualenv by examining `V
 
 ### Virtualenv auto creation
 
-If no Python interpreter is selected for the project, `pdm-venv` will take charge to create on for you and select the venv interpreter automatically, just like
+If no Python interpreter is selected for the project, `pdm-venv` will take charge to create one for you and select the venv interpreter automatically, just like
 what `pipenv` and `poetry` do.
 
 ## Configuration
 
-| Config Item     | Description                                   | Default Value                       | Available in Project | Env var |
-| --------------- | --------------------------------------------- | ----------------------------------- | -------------------- | ------- |
-| `venv.location` | The root directory to store virtualenvs       | `appdirs.user_data_dir() / "venvs"` | No                   |         |
-| `venv.backend`  | The default backend used to create virtualenv | virtualenv                          | No                   |         |
+| Config Item     | Description                                    | Default Value                       | Available in Project | Env var |
+| --------------- | ---------------------------------------------- | ----------------------------------- | -------------------- | ------- |
+| `venv.location` | The root directory to store virtualenvs        | `appdirs.user_data_dir() / "venvs"` | No                   |         |
+| `venv.backend`  | The default backend used to create virtualenvs | `virtualenv`                        | No                   |         |
