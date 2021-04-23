@@ -589,7 +589,7 @@ In this way you won't lose the fancy shell features. You can then feed the outpu
 <p>When <code>pdm-venv</code> is enabled, Python interpreters associated with the venvs will also show in the interpreter list of <code>pdm use</code> or <code>pdm init</code> command.</p>
 <p>Additionally, if <code>pdm</code> detects it is inside an active virtualenv by examining <code>VIRTUAL_ENV</code> env var, it will reuse that virtualenv for later actions.</p>
 <h3 id="virtualenv-auto-creation">Virtualenv auto creation<a class="headerlink" href="#virtualenv-auto-creation" title="Permanent link">#</a></h3>
-<p>If no Python interpreter is selected for the project, <code>pdm-venv</code> will take charge to create on for you and select the venv interpreter automatically, just like
+<p>If no Python interpreter is selected for the project, <code>pdm-venv</code> will take charge to create one for you and select the venv interpreter automatically, just like
 what <code>pipenv</code> and <code>poetry</code> do.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
 <table>
@@ -612,8 +612,8 @@ what <code>pipenv</code> and <code>poetry</code> do.</p>
 </tr>
 <tr>
 <td><code>venv.backend</code></td>
-<td>The default backend used to create virtualenv</td>
-<td>virtualenv</td>
+<td>The default backend used to create virtualenvs</td>
+<td><code>virtualenv</code></td>
 <td>No</td>
 <td></td>
 </tr>
