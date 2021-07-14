@@ -13,6 +13,12 @@ pdm-venv requires Python>=3.7
 
 ## Installation
 
+On PDM 1.6.4+, you can install the plugin directly by:
+
+```bash
+$ pdm plugin add pdm-venv
+```
+
 If `pdm` is installed via [pipx](https://github.com/pipxproject/pipx)(the recommended way), run:
 
 ```bash
