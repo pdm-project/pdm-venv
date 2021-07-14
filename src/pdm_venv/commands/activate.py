@@ -51,7 +51,7 @@ class ActivateCommand(BaseCommand):
             filename = "activate.fish"
         elif shell == "csh":
             filename = "activate.csh"
-        elif shell == "powershell":
+        elif shell == "powershell" or "pwsh":
             filename = "Activate.ps1"
         else:
             filename = "activate"

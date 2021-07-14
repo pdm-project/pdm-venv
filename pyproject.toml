@@ -52,6 +52,8 @@ dev = [
     "towncrier~=19.2",
     "parver~=0.3",
     "pytest-mock~=3.5",
+    "pre-commit~=2.13",
+    "nox~=2021.6",
 ]
 
 [tool.black]
