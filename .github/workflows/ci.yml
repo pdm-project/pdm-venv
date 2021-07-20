@@ -29,7 +29,6 @@ jobs:
         uses: pdm-project/setup-pdm@main
         with:
           python-version: ${{ matrix.python-version }}
-          prereleases: true
       - name: Set Variables
         id: set_variables
         run: |
