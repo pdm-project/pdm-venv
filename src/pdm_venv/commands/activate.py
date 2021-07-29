@@ -12,7 +12,7 @@ from pdm_venv.utils import BIN_DIR, iter_venvs
 
 
 class ActivateCommand(BaseCommand):
-    """List all virtualenvs associated with this project"""
+    """Activate the virtualenv with the given name"""
 
     arguments = [verbose_option]
 
