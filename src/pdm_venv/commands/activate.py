@@ -1,4 +1,5 @@
 import argparse
+import shlex
 from pathlib import Path
 
 import shellingham
@@ -48,11 +49,15 @@ class ActivateCommand(BaseCommand):
     def get_activate_command(self, venv: Path) -> str:
         shell, _ = shellingham.detect_shell()
         if shell == "fish":
-            filename = "activate.fish"
+            command, filename = "source", "activate.fish"
         elif shell == "csh":
-            filename = "activate.csh"
-        elif shell == "powershell" or "pwsh":
-            filename = "Activate.ps1"
+            command, filename = "source", "activate.csh"
+        elif shell in ["powershell", "pwsh"]:
+            command, filename = ".", "Activate.ps1"
         else:
-            filename = "activate"
-        return str(venv / BIN_DIR / filename)
+            command, filename = "source", "activate"
+        activate_script = venv / BIN_DIR / filename
+        if activate_script.exists():
+            return f"{command} {shlex.quote(str(activate_script))}"
+        # Conda backed virtualenvs don't have activate scripts
+        return f"conda activate {shlex.quote(str(venv))}"

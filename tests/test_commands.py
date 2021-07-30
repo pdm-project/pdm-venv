@@ -63,7 +63,12 @@ def test_venv_activate(invoke, mocker):
     mocker.patch("shellingham.detect_shell", return_value=("bash", None))
     result = invoke(["venv", "activate", key])
     assert result.exit_code == 0, result.stderr
-    assert "activate" in result.output.lower()
+
+    if os.getenv("DEFAULT_BACKEND") == "conda":
+        assert result.output.startswith("conda activate")
+    else:
+        assert result.output.strip("'\"\n").endswith("activate")
+        assert result.output.startswith("source")
 
 
 def test_venv_auto_create(invoke, mocker):
