@@ -80,10 +80,10 @@ Removed C:\Users\Frost Ming\AppData\Local\pdm\pdm\venvs\test-project-8Sgn_62n-fo
 ### Activate a virtualenv
 
 Instead of spawning a subshell like what `pipenv` and `poetry` do, `pdm-venv` doesn't create the shell for you but print the activate command to the console.
-In this way you won't lose the fancy shell features. You can then feed the output to `source` command to activate the virtualenv without leaving the current shell:
+In this way you won't lose the fancy shell features. You can then feed the output to `eval` to activate the virtualenv without leaving the current shell:
 
 ```console
-$ . "$(pdm venv activate for-test)"
+$ eval $(pdm venv activate for-test)
 (test-project-8Sgn_62n-for-test) $  # Virtualenv entered
 ```
 
