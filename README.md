@@ -82,14 +82,36 @@ Removed C:\Users\Frost Ming\AppData\Local\pdm\pdm\venvs\test-project-8Sgn_62n-fo
 Instead of spawning a subshell like what `pipenv` and `poetry` do, `pdm-venv` doesn't create the shell for you but print the activate command to the console.
 In this way you won't lose the fancy shell features. You can then feed the output to `eval` to activate the virtualenv without leaving the current shell:
 
+**Bash/csh/zsh**
+
 ```console
 $ eval $(pdm venv activate for-test)
 (test-project-8Sgn_62n-for-test) $  # Virtualenv entered
 ```
 
-You can make your own shell shortcut function to avoid the input of long command.
+**Fish**
 
-Additionally, if the saved Python interpreter is a venv Python, you can omit the name argument of `activate`.
+```console
+$ eval (pdm venv activate for-test)
+```
+
+**Powershell**
+
+```console
+PS1> Invoke-Expression (pdm venv activate for-test)
+```
+
+You can make your own shell shortcut function to avoid the input of long command. Here is an example of Bash:
+
+```bash
+pdm_venv_activate() {
+    eval $('pdm' 'venv' 'activate' "$1")
+}
+```
+
+Then you can activate it by `pdm_venv_activate $venv_name` and deactivate by `deactivate` directly.
+
+Additionally, if the saved Python interpreter is a venv Python, you can omit the name argument following `activate`.
 
 ### Switch Python interpreter
 
