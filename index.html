@@ -582,12 +582,24 @@ $ pdm venv create --with venv <span class="m">3</span>.9
 </code></pre></div>
 <h3 id="activate-a-virtualenv">Activate a virtualenv<a class="headerlink" href="#activate-a-virtualenv" title="Permanent link">#</a></h3>
 <p>Instead of spawning a subshell like what <code>pipenv</code> and <code>poetry</code> do, <code>pdm-venv</code> doesn't create the shell for you but print the activate command to the console.
-In this way you won't lose the fancy shell features. You can then feed the output to <code>source</code> command to activate the virtualenv without leaving the current shell:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>. <span class="s2">&quot;</span><span class="k">$(</span>pdm venv activate <span class="k">for</span>-test<span class="k">)</span><span class="s2">&quot;</span>
+In this way you won't lose the fancy shell features. You can then feed the output to <code>eval</code> to activate the virtualenv without leaving the current shell:</p>
+<p><strong>Bash/csh/zsh</strong></p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">eval</span> <span class="k">$(</span>pdm venv activate <span class="k">for</span>-test<span class="k">)</span>
 <span class="gp gp-VirtualEnv">(test-project-8Sgn_62n-for-test)</span> <span class="gp">$  </span><span class="c1"># Virtualenv entered</span>
 </code></pre></div>
-<p>You can make your own shell shortcut function to avoid the input of long command.</p>
-<p>Additionally, if the saved Python interpreter is a venv Python, you can omit the name argument of <code>activate</code>.</p>
+<p><strong>Fish</strong></p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">eval</span> <span class="o">(</span>pdm venv activate <span class="k">for</span>-test<span class="o">)</span>
+</code></pre></div>
+<p><strong>Powershell</strong></p>
+<div class="highlight"><pre><span></span><code><span class="go">PS1&gt; Invoke-Expression (pdm venv activate for-test)</span>
+</code></pre></div>
+<p>You can make your own shell shortcut function to avoid the input of long command. Here is an example of Bash:</p>
+<div class="highlight"><pre><span></span><code>pdm_venv_activate<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">eval</span> <span class="k">$(</span><span class="s1">&#39;pdm&#39;</span> <span class="s1">&#39;venv&#39;</span> <span class="s1">&#39;activate&#39;</span> <span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="k">)</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Then you can activate it by <code>pdm_venv_activate $venv_name</code> and deactivate by <code>deactivate</code> directly.</p>
+<p>Additionally, if the saved Python interpreter is a venv Python, you can omit the name argument following <code>activate</code>.</p>
 <h3 id="switch-python-interpreter">Switch Python interpreter<a class="headerlink" href="#switch-python-interpreter" title="Permanent link">#</a></h3>
 <p>When <code>pdm-venv</code> is enabled, Python interpreters associated with the venvs will also show in the interpreter list of <code>pdm use</code> or <code>pdm init</code> command.</p>
 <p>Additionally, if <code>pdm</code> detects it is inside an active virtualenv by examining <code>VIRTUAL_ENV</code> env var, it will reuse that virtualenv for later actions.</p>
