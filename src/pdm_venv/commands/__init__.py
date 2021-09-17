@@ -6,7 +6,7 @@ from pdm.cli.commands.base import BaseCommand
 from pdm_venv.commands.activate import ActivateCommand
 from pdm_venv.commands.create import CreateCommand
 from pdm_venv.commands.list import ListCommand
-from pdm_venv.commands.prune import PruneCommand
+from pdm_venv.commands.purge import PurgeCommand
 from pdm_venv.commands.remove import RemoveCommand
 
 
@@ -22,7 +22,7 @@ class VenvCommand(BaseCommand):
         ListCommand.register_to(subparser, "list")
         RemoveCommand.register_to(subparser, "remove")
         ActivateCommand.register_to(subparser, "activate")
-        PruneCommand.register_to(subparser, "prune")
+        PurgeCommand.register_to(subparser, "purge")
         self.parser = parser
 
     def handle(self, project: Project, options: argparse.Namespace) -> None:
