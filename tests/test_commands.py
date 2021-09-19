@@ -101,7 +101,7 @@ def test_venv_purge_force(invoke, mocker):
     assert not os.path.exists(venv_path)
 
 
-user_options = [("none", 1), ("0", 0), ("all", 0)]
+user_options = [("none", True), ("0", False), ("all", False)]
 
 
 @pytest.mark.parametrize("user_choices, is_path_exists", user_options)
