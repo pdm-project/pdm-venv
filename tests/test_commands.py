@@ -1,6 +1,8 @@
 import os
 import re
 
+import pytest
+
 
 def test_venv_create(invoke):
     result = invoke(["venv", "create"])
@@ -75,3 +77,40 @@ def test_venv_auto_create(invoke, mocker):
     creator = mocker.patch("pdm_venv.backends.Backend.create")
     invoke(["install"])
     creator.assert_called_once()
+
+
+def test_venv_purge(invoke, mocker):
+    result = invoke(["venv", "create"])
+    assert result.exit_code == 0, result.stderr
+    venv_path = re.match(
+        r"Virtualenv (.+) is created successfully", result.output
+    ).group(1)
+    result = invoke(["venv", "purge"], input="y")
+    assert result.exit_code == 0, result.stderr
+    assert not os.path.exists(venv_path)
+
+
+def test_venv_purge_force(invoke, mocker):
+    result = invoke(["venv", "create"])
+    assert result.exit_code == 0, result.stderr
+    venv_path = re.match(
+        r"Virtualenv (.+) is created successfully", result.output
+    ).group(1)
+    result = invoke(["venv", "purge", "-f"])
+    assert result.exit_code == 0, result.stderr
+    assert not os.path.exists(venv_path)
+
+
+user_options = [("none", True), ("0", False), ("all", False)]
+
+
+@pytest.mark.parametrize("user_choices, is_path_exists", user_options)
+def test_venv_purge_interactive(invoke, mocker, user_choices, is_path_exists):
+    result = invoke(["venv", "create"])
+    assert result.exit_code == 0, result.stderr
+    venv_path = re.match(
+        r"Virtualenv (.+) is created successfully", result.output
+    ).group(1)
+    result = invoke(["venv", "purge", "-i"], input=user_choices)
+    assert result.exit_code == 0, result.stderr
+    assert os.path.exists(venv_path) == is_path_exists
