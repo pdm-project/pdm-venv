@@ -29,6 +29,11 @@ class CreateCommand(BaseCommand):
             action="store_true",
             help="Recreate if the virtualenv already exists",
         )
+        parser.add_argument(
+            "--local",
+            action="store_true",
+            help="Create the virtualenv in project directory",
+        )
         parser.add_argument("-n", "--name", help="Specify the name of the virtualenv")
         parser.add_argument(
             "python",
@@ -47,7 +52,9 @@ class CreateCommand(BaseCommand):
         with project.core.ui.open_spinner(
             f"Creating virtualenv using {backend}..."
         ) as spinner:
-            path = venv_backend.create(options.name, options.venv_args, options.force)
+            path = venv_backend.create(
+                options.name, options.venv_args, options.force, options.local
+            )
             spinner.succeed(
                 f"Virtualenv {termui.green(str(path))} is created successfully"
             )

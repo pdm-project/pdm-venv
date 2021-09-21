@@ -61,16 +61,24 @@ class Backend(abc.ABC):
         )
         shutil.rmtree(location)
 
-    def get_location(self, name: Optional[str]) -> Path:
-        venv_parent = Path(self.project.config["venv.location"])
+    def get_location(self, name: Optional[str], is_local: Optional[bool]) -> Path:
+        venv_parent = (
+            self.project.root
+            if is_local
+            else Path(self.project.config["venv.location"])
+        )
         if not venv_parent.is_dir():
             venv_parent.mkdir(exist_ok=True, parents=True)
         return venv_parent / f"{get_venv_prefix(self.project)}{name or self.ident}"
 
     def create(
-        self, name: Optional[str] = None, args: Tuple[str] = (), force: bool = False
+        self,
+        name: Optional[str] = None,
+        args: Tuple[str] = (),
+        force: bool = False,
+        is_local: Optional[bool] = False,
     ) -> Path:
-        location = self.get_location(name)
+        location = self.get_location(name, is_local)
         self._ensure_clean(location, force)
         self.perform_create(location, args)
         return location
