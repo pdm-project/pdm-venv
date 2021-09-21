@@ -13,6 +13,15 @@ def test_venv_create(invoke):
     assert os.path.exists(venv_path)
 
 
+def test_venv_create_local(invoke):
+    result = invoke(["venv", "create", "--local"])
+    assert result.exit_code == 0, result.stderr
+    venv_path = re.match(
+        r"Virtualenv (.+) is created successfully", result.output
+    ).group(1)
+    assert os.path.exists(venv_path)
+
+
 def test_venv_list(invoke):
     result = invoke(["venv", "create"])
     assert result.exit_code == 0, result.stderr
