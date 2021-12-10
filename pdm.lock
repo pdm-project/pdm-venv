@@ -1,9 +1,4 @@
 [[package]]
-name = "appdirs"
-version = "1.4.4"
-summary = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-
-[[package]]
 name = "argcomplete"
 version = "1.12.3"
 summary = "Bash tab completion for argparse"
@@ -244,11 +239,10 @@ dependencies = [
 
 [[package]]
 name = "pdm"
-version = "1.11.0"
+version = "1.11.2"
 requires_python = ">=3.7"
 summary = "Python Development Master"
 dependencies = [
-    "appdirs",
     "atoml>=1.0.3",
     "click>=7",
     "importlib-metadata; python_version < \"3.8\"",
@@ -257,13 +251,14 @@ dependencies = [
     "pdm-pep517<0.10,>=0.9",
     "pep517>=0.11.0",
     "pip>=20.1",
-    "python-dotenv~=0.15",
+    "platformdirs",
+    "python-dotenv>=0.15",
     "pythonfinder",
     "resolvelib<0.9,>=0.8",
-    "shellingham<2.0.0,>=1.3.2",
-    "tomli<2.0.0,>=1.1.0",
+    "shellingham>=1.3.2",
+    "tomli>=1.1.0",
     "typing-extensions; python_version < \"3.8\"",
-    "wheel<1.0.0,>=0.36.2",
+    "wheel>=0.36.2",
 ]
 
 [[package]]
@@ -497,10 +492,6 @@ lock_version = "3.1"
 content_hash = "sha256:cd7467b4cdf0d46ba74e81e6f62997923001d74b4fe104c4fd698ba266aac8a4"
 
 [metadata.files]
-"appdirs 1.4.4" = [
-    {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
-    {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
-]
 "argcomplete 1.12.3" = [
     {file = "argcomplete-1.12.3-py2.py3-none-any.whl", hash = "sha256:291f0beca7fd49ce285d2f10e4c1c77e9460cf823eef2de54df0c0fec88b0d81"},
     {file = "argcomplete-1.12.3.tar.gz", hash = "sha256:2c7dbffd8c045ea534921e63b0be6fe65e88599990d8dc408ac8c542b72a5445"},
@@ -691,9 +682,9 @@ content_hash = "sha256:cd7467b4cdf0d46ba74e81e6f62997923001d74b4fe104c4fd698ba26
     {file = "parver-0.3.1-py2.py3-none-any.whl", hash = "sha256:41a548c51b006a2f2522b54293cbfd2514bffa10774ece8430c9964a20cbd8b4"},
     {file = "parver-0.3.1.tar.gz", hash = "sha256:c902e0653bcce927cc156a7fd9b3a51924cbce3bf3d0bfd49fc282bfd0c5dfd3"},
 ]
-"pdm 1.11.0" = [
-    {file = "pdm-1.11.0-py3-none-any.whl", hash = "sha256:35cc3eeb4f9957dae104ef9255508e8a9e6d081dd873642d0aec7f6ecde36a02"},
-    {file = "pdm-1.11.0.tar.gz", hash = "sha256:94ceeeb9b9d1c26a7227832ab9665786b34305cb7dcc206e55682a600ebff53b"},
+"pdm 1.11.2" = [
+    {file = "pdm-1.11.2-py3-none-any.whl", hash = "sha256:c4163fb7fad9287afee42ad609404f1449b10d864b88cfd02043c09e6620f5a8"},
+    {file = "pdm-1.11.2.tar.gz", hash = "sha256:f85410858879b23017b79ec30d98b0dbae11cc0b5ccbadfbe932433969636209"},
 ]
 "pdm-pep517 0.9.4" = [
     {file = "pdm_pep517-0.9.4-py3-none-any.whl", hash = "sha256:babd5771a90a771952278d8f89545d2236be84314b37b18f4681339de4c232f7"},
