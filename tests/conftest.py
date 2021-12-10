@@ -27,6 +27,8 @@ def project(isolated):
     core.init_parser()
     core.load_plugins()
     p = core.create_project(isolated)
+    p.root.joinpath(".global").mkdir()
+    p.GLOBAL_PROJECT = p.root.joinpath(".global/project")
     p.global_config["venv.location"] = str(isolated / "venvs")
     p.global_config["venv.backend"] = os.getenv("VENV_BACKEND", "virtualenv")
     return p

@@ -25,9 +25,25 @@ def test_venv_backend_create(project, mocker):
 
 def test_conda_backend_create(project, mocker):
     backend = CondaBackend(project, "3.8")
-    assert backend.ident
+    assert backend.ident == "3.8"
     mock_call = mocker.patch("subprocess.check_call")
     location = backend.create()
     mock_call.assert_called_once_with(
         ["conda", "create", "--yes", "--prefix", str(location), "pip", "python=3.8"]
+    )
+
+    backend = CondaBackend(project, None)
+    python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
+    assert backend.ident == python_version
+    location = backend.create()
+    mock_call.assert_called_with(
+        [
+            "conda",
+            "create",
+            "--yes",
+            "--prefix",
+            str(location),
+            "pip",
+            f"python={python_version}",
+        ]
     )

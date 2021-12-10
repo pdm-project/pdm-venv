@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import List, Mapping, Optional, Tuple, Type
 
 from pdm import Project, termui
-from pdm.exceptions import ProjectError
+from pdm.exceptions import PdmUsageError, ProjectError
 from pdm.models.python import PythonInfo
 from pdm.utils import cached_property
 
@@ -100,7 +100,22 @@ class VenvBackend(VirtualenvBackend):
 
 
 class CondaBackend(Backend):
+    @property
+    def ident(self) -> str:
+        # Conda supports specifying python that doesn't exist,
+        # use the passed-in name directly
+        if self.python:
+            return self.python
+        return super().ident
+
     def perform_create(self, location: Path, args: Tuple[str]) -> Path:
+        if self.python:
+            python_ver = self.python
+        else:
+            python = self._resolved_interpreter
+            python_ver = f"{python.major}.{python.minor}"
+        if any(arg.startswith("python=") for arg in args):
+            raise PdmUsageError("Cannot use python= in conda creation arguments")
         cmd = [
             "conda",
             "create",
@@ -109,15 +124,10 @@ class CondaBackend(Backend):
             str(location),
             # Ensure the pip package is installed.
             "pip",
+            f"python={python_ver}",
+            *args,
         ]
 
-        cmd.extend(args)
-
-        if self.python:
-            python_dep = "python={}".format(self.python)
-        else:
-            python_dep = "python"
-        cmd.append(python_dep)
         self.subprocess_call(cmd)
 
 
