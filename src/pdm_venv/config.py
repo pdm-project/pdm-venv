@@ -1,13 +1,13 @@
 import os
 
-import appdirs
+import platformdirs
 from pdm.project import ConfigItem
 from pdm.project.config import ensure_boolean
 
 venv_configs = {
     "venv.location": ConfigItem(
         "Parent directory for virtualenvs",
-        os.path.join(appdirs.user_data_dir("pdm"), "venvs"),
+        os.path.join(platformdirs.user_data_dir("pdm"), "venvs"),
         global_only=True,
     ),
     "venv.backend": ConfigItem(
