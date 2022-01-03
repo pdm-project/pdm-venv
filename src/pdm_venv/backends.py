@@ -68,9 +68,16 @@ class Backend(abc.ABC):
         return venv_parent / f"{get_venv_prefix(self.project)}{name or self.ident}"
 
     def create(
-        self, name: Optional[str] = None, args: Tuple[str] = (), force: bool = False
+        self,
+        name: Optional[str] = None,
+        args: Tuple[str] = (),
+        force: bool = False,
+        in_project: bool = False,
     ) -> Path:
-        location = self.get_location(name)
+        if in_project:
+            location = self.project.root / ".venv"
+        else:
+            location = self.get_location(name)
         self._ensure_clean(location, force)
         self.perform_create(location, args)
         return location

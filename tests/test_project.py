@@ -16,6 +16,13 @@ def test_create_venv_first_time(invoke, project):
     assert Path(project.project_config["python.path"]).relative_to(venv_path)
 
 
+def test_create_venv_in_project(invoke, project):
+    project.project_config["venv.in_project"] = True
+    result = invoke(["install"])
+    assert result.exit_code == 0
+    assert project.root.joinpath(".venv").exists()
+
+
 def test_find_interpreters_from_venv(invoke, project):
     result = invoke(["install"])
     assert result.exit_code == 0

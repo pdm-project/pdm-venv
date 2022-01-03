@@ -74,7 +74,9 @@ class Project(PdmProject):
                 )
                 backend: str = self.config["venv.backend"]
                 venv_backend = BACKENDS[backend](self, None)
-                path = venv_backend.create(None, (), False)
+                path = venv_backend.create(
+                    None, (), False, self.config["venv.in_project"]
+                )
                 self.core.ui.echo(f"Virtualenv {path} is created successfully")
             self.python = PythonInfo.from_path(get_venv_python(path))
             return GlobalEnvironment(self)

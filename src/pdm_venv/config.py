@@ -13,6 +13,12 @@ venv_configs = {
     "venv.backend": ConfigItem(
         "Default backend to create virtualenv", default="virtualenv"
     ),
+    "venv.in_project": ConfigItem(
+        "Create virtualenv in `.venv` under project root",
+        default=False,
+        env_var="PDM_VENV_IN_PROJECT",
+        coerce=ensure_boolean,
+    ),
     # Override the default use_venv value to True
     "use_venv": ConfigItem(
         "Install packages into the activated venv site packages instead of PEP 582",
