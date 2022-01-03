@@ -1,6 +1,19 @@
 # Changelog
 
 <!-- insertion marker -->
+[v0.4.0](https://github.com/pdm-project/pdm-venv/releases/tag/0.4.0) (2022-01-03)
+---------------------------------------------------------------------------------
+
+### Features & Improvements
+
+- Support creating venv in project with a config `venv.in_project`. [#20](https://github.com/pdm-project/pdm-venv/issues/20)
+- Add an option to purge created Virtualenvs [#21](https://github.com/pdm-project/pdm-venv/issues/21)
+
+### Bug Fixes
+
+- Fix a conda creation args that 1)uses what the interpreter version is used when no python arg is given, and 2)allows using python version that is not installed yet. [#25](https://github.com/pdm-project/pdm-venv/issues/25)
+
+
 [v0.3.1](https://github.com/pdm-project/pdm-venv/releases/tag/0.3.1) (2021-08-23)
 ---------------------------------------------------------------------------------
 
