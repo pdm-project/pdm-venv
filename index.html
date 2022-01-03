@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://pdm-project.github.io/pdm-venv/">
       
       <link rel="shortcut icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-6.2.8">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-6.2.8">
     
     
       
@@ -605,7 +605,7 @@ In this way you won't lose the fancy shell features. You can then feed the outpu
 <p>Additionally, if <code>pdm</code> detects it is inside an active virtualenv by examining <code>VIRTUAL_ENV</code> env var, it will reuse that virtualenv for later actions.</p>
 <h3 id="virtualenv-auto-creation">Virtualenv auto creation<a class="headerlink" href="#virtualenv-auto-creation" title="Permanent link">#</a></h3>
 <p>If no Python interpreter is selected for the project, <code>pdm-venv</code> will take charge to create one for you and select the venv interpreter automatically, just like
-what <code>pipenv</code> and <code>poetry</code> do.</p>
+what <code>pipenv</code> and <code>poetry</code> do. Additionaly, if config item <code>venv.in_project</code> is <code>True</code>, <code>pdm-venv</code> will create the virtualenv in <code>${PROJECT_ROOT}/.venv</code>.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
 <table>
 <thead>
@@ -631,6 +631,13 @@ what <code>pipenv</code> and <code>poetry</code> do.</p>
 <td><code>virtualenv</code></td>
 <td>No</td>
 <td></td>
+</tr>
+<tr>
+<td><code>venv.in_project</code></td>
+<td>Create virtualenv in <code>.venv</code> under project root</td>
+<td><code>False</code></td>
+<td>Yes</td>
+<td><code>PDM_VENV_IN_PROJECT</code></td>
 </tr>
 </tbody>
 </table>
