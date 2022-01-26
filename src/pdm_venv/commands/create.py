@@ -42,12 +42,15 @@ class CreateCommand(BaseCommand):
         )
 
     def handle(self, project: Project, options: argparse.Namespace) -> None:
+        in_project = project.config["venv.in_project"]
         backend: str = options.backend or project.config["venv.backend"]
         venv_backend = BACKENDS[backend](project, options.python)
         with project.core.ui.open_spinner(
             f"Creating virtualenv using {backend}..."
         ) as spinner:
-            path = venv_backend.create(options.name, options.venv_args, options.force)
+            path = venv_backend.create(
+                options.name, options.venv_args, options.force, in_project
+            )
             spinner.succeed(
                 f"Virtualenv {termui.green(str(path))} is created successfully"
             )
