@@ -21,7 +21,7 @@ class CreateCommand(BaseCommand):
             "--with",
             dest="backend",
             choices=BACKENDS.keys(),
-            help="Speicify the backend to create the virtualenv",
+            help="Specify the backend to create the virtualenv",
         )
         parser.add_argument(
             "-f",
