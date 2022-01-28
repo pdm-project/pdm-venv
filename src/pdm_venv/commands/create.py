@@ -21,7 +21,7 @@ class CreateCommand(BaseCommand):
             "--with",
             dest="backend",
             choices=BACKENDS.keys(),
-            help="Speicify the backend to create the virtualenv",
+            help="Specify the backend to create the virtualenv",
         )
         parser.add_argument(
             "-f",
@@ -42,12 +42,17 @@ class CreateCommand(BaseCommand):
         )
 
     def handle(self, project: Project, options: argparse.Namespace) -> None:
+        in_project = (
+            project.config["venv.in_project"] if not options.name else False
+        )  # ignore venv.in_project flag if name is given
         backend: str = options.backend or project.config["venv.backend"]
         venv_backend = BACKENDS[backend](project, options.python)
         with project.core.ui.open_spinner(
             f"Creating virtualenv using {backend}..."
         ) as spinner:
-            path = venv_backend.create(options.name, options.venv_args, options.force)
+            path = venv_backend.create(
+                options.name, options.venv_args, options.force, in_project
+            )
             spinner.succeed(
                 f"Virtualenv {termui.green(str(path))} is created successfully"
             )
