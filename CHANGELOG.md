@@ -1,6 +1,14 @@
 # Changelog
 
 <!-- insertion marker -->
+[v0.4.1](https://github.com/pdm-project/pdm-venv/releases/tag/0.4.1) (2022-01-29)
+---------------------------------------------------------------------------------
+
+### Bug Fixes
+
+- Fix missing argument in the create command [#32](https://github.com/pdm-project/pdm-venv/issues/32)
+
+
 [v0.4.0](https://github.com/pdm-project/pdm-venv/releases/tag/0.4.0) (2022-01-03)
 ---------------------------------------------------------------------------------
 
