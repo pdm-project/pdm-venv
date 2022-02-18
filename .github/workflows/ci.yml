@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.7, 3.8, 3.9, "3.10"]
         venv-backend: [virtualenv, venv, conda]
 
     steps:
@@ -51,5 +51,5 @@ jobs:
         run: python -m pip install -U nox .
       - name: Run Tests
         run: |
-          export LD_PRELOAD=/lib/x86_64-linux-gnu/libgcc_s.so.1
+          pdm config install.parallel false
           nox -s "test-${{ matrix.python-version }}(backend='${{ matrix.venv-backend }}')"
