@@ -18,12 +18,6 @@ requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 summary = "Atomic file writes."
 
 [[package]]
-name = "atoml"
-version = "1.0.3"
-requires_python = ">=3.6"
-summary = "Yet another style preserving TOML library"
-
-[[package]]
 name = "attrs"
 version = "21.2.0"
 requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
@@ -37,6 +31,11 @@ summary = "Compatibility shim providing selectable entry points for older implem
 dependencies = [
     "importlib-metadata; python_version < \"3.8\"",
 ]
+
+[[package]]
+name = "blinker"
+version = "1.4"
+summary = "Fast, simple object-to-object and broadcast signaling"
 
 [[package]]
 name = "cached-property"
@@ -142,7 +141,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "Markdown"
+name = "markdown"
 version = "3.3.4"
 requires_python = ">=3.6"
 summary = "Python implementation of Markdown."
@@ -151,7 +150,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "MarkupSafe"
+name = "markupsafe"
 version = "2.0.1"
 requires_python = ">=3.6"
 summary = "Safely add untrusted strings to HTML/XML markup."
@@ -239,16 +238,16 @@ dependencies = [
 
 [[package]]
 name = "pdm"
-version = "1.11.2"
+version = "1.13.0.post0"
 requires_python = ">=3.7"
 summary = "Python Development Master"
 dependencies = [
-    "atoml>=1.0.3",
+    "blinker",
     "click>=7",
     "importlib-metadata; python_version < \"3.8\"",
     "installer~=0.3.0",
     "packaging",
-    "pdm-pep517<0.10,>=0.9",
+    "pdm-pep517<0.12,>=0.9",
     "pep517>=0.11.0",
     "pip>=20.1",
     "platformdirs",
@@ -257,6 +256,7 @@ dependencies = [
     "resolvelib<0.9,>=0.8",
     "shellingham>=1.3.2",
     "tomli>=1.1.0",
+    "tomlkit<1,>=0.8.0",
     "typing-extensions; python_version < \"3.8\"",
     "wheel>=0.36.2",
 ]
@@ -320,7 +320,7 @@ requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 summary = "library with cross-python path, ini-parsing, io, code, log facilities"
 
 [[package]]
-name = "Pygments"
+name = "pygments"
 version = "2.10.0"
 requires_python = ">=3.5"
 summary = "Pygments is a syntax highlighting package written in Python."
@@ -439,6 +439,12 @@ requires_python = ">=3.6"
 summary = "A lil' TOML parser"
 
 [[package]]
+name = "tomlkit"
+version = "0.10.0"
+requires_python = ">=3.6,<4.0"
+summary = "Style preserving TOML library"
+
+[[package]]
 name = "towncrier"
 version = "19.9.0"
 summary = "Building newsfiles for your project."
@@ -489,7 +495,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:24cde4f398cc5af8d297d37471520a5874f407987ea07a80b14ab516b8836a64"
+content_hash = "sha256:fbdd2c110d336b16d1312318c2463f67faa5547e25e3ac428825650a12e237c7"
 
 [metadata.files]
 "argcomplete 1.12.3" = [
@@ -504,10 +510,6 @@ content_hash = "sha256:24cde4f398cc5af8d297d37471520a5874f407987ea07a80b14ab516b
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
     {file = "atomicwrites-1.4.0.tar.gz", hash = "sha256:ae70396ad1a434f9c7046fd2dd196fc04b12f9e91ffb859164193be8b6168a7a"},
 ]
-"atoml 1.0.3" = [
-    {file = "atoml-1.0.3-py3-none-any.whl", hash = "sha256:944c0e9043ca4e0729d4125132841ef1110677b8d015a624892d63cdc4988655"},
-    {file = "atoml-1.0.3.tar.gz", hash = "sha256:5dd70efcafde94a6aa5db2e8c6af5d832bf95b38f47d3283ee3779e920218e94"},
-]
 "attrs 21.2.0" = [
     {file = "attrs-21.2.0-py2.py3-none-any.whl", hash = "sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1"},
     {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
@@ -515,6 +517,9 @@ content_hash = "sha256:24cde4f398cc5af8d297d37471520a5874f407987ea07a80b14ab516b
 "backports.entry-points-selectable 1.1.0" = [
     {file = "backports.entry_points_selectable-1.1.0-py2.py3-none-any.whl", hash = "sha256:a6d9a871cde5e15b4c4a53e3d43ba890cc6861ec1332c9c2428c92f977192acc"},
     {file = "backports.entry_points_selectable-1.1.0.tar.gz", hash = "sha256:988468260ec1c196dab6ae1149260e2f5472c9110334e5d51adcb77867361f6a"},
+]
+"blinker 1.4" = [
+    {file = "blinker-1.4.tar.gz", hash = "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"},
 ]
 "cached-property 1.5.2" = [
     {file = "cached_property-1.5.2-py2.py3-none-any.whl", hash = "sha256:df4f613cf7ad9a588cc381aaf4a512d26265ecebd5eb9e1ba12f1319eb85a6a0"},
@@ -682,9 +687,9 @@ content_hash = "sha256:24cde4f398cc5af8d297d37471520a5874f407987ea07a80b14ab516b
     {file = "parver-0.3.1-py2.py3-none-any.whl", hash = "sha256:41a548c51b006a2f2522b54293cbfd2514bffa10774ece8430c9964a20cbd8b4"},
     {file = "parver-0.3.1.tar.gz", hash = "sha256:c902e0653bcce927cc156a7fd9b3a51924cbce3bf3d0bfd49fc282bfd0c5dfd3"},
 ]
-"pdm 1.11.2" = [
-    {file = "pdm-1.11.2-py3-none-any.whl", hash = "sha256:c4163fb7fad9287afee42ad609404f1449b10d864b88cfd02043c09e6620f5a8"},
-    {file = "pdm-1.11.2.tar.gz", hash = "sha256:f85410858879b23017b79ec30d98b0dbae11cc0b5ccbadfbe932433969636209"},
+"pdm 1.13.0.post0" = [
+    {file = "pdm-1.13.0.post0-py3-none-any.whl", hash = "sha256:625234b57007681f4b8a9307a2d288c475a34ff9ed041c7886e19382f31b30cc"},
+    {file = "pdm-1.13.0.post0.tar.gz", hash = "sha256:eaf77e5a8a889a064fd6b6896c86078914cb56769736dfec561d4f73d4544225"},
 ]
 "pdm-pep517 0.9.4" = [
     {file = "pdm_pep517-0.9.4-py3-none-any.whl", hash = "sha256:babd5771a90a771952278d8f89545d2236be84314b37b18f4681339de4c232f7"},
@@ -800,6 +805,10 @@ content_hash = "sha256:24cde4f398cc5af8d297d37471520a5874f407987ea07a80b14ab516b
 "tomli 1.2.1" = [
     {file = "tomli-1.2.1-py3-none-any.whl", hash = "sha256:8dd0e9524d6f386271a36b41dbf6c57d8e32fd96fd22b6584679dc569d20899f"},
     {file = "tomli-1.2.1.tar.gz", hash = "sha256:a5b75cb6f3968abb47af1b40c1819dc519ea82bcc065776a866e8d74c5ca9442"},
+]
+"tomlkit 0.10.0" = [
+    {file = "tomlkit-0.10.0-py3-none-any.whl", hash = "sha256:cac4aeaff42f18fef6e07831c2c2689a51df76cf2ede07a6a4fa5fcb83558870"},
+    {file = "tomlkit-0.10.0.tar.gz", hash = "sha256:d99946c6aed3387c98b89d91fb9edff8f901bf9255901081266a84fb5604adcd"},
 ]
 "towncrier 19.9.0" = [
     {file = "towncrier-19.9.0-py2.py3-none-any.whl", hash = "sha256:8726035bc95b1146640bf49ce8693465b54e37a791697e3119ab43dbe30a577a"},

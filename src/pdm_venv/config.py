@@ -20,10 +20,11 @@ venv_configs = {
         coerce=ensure_boolean,
     ),
     # Override the default use_venv value to True
-    "use_venv": ConfigItem(
+    "python.use_venv": ConfigItem(
         "Install packages into the activated venv site packages instead of PEP 582",
         True,
         env_var="PDM_USE_VENV",
         coerce=ensure_boolean,
+        replace="use_venv",
     ),
 }
