@@ -40,7 +40,7 @@ class Project(PdmProject):
             # compatible with the exact version
             env.python_requires = PySpecSet(f"=={self.python.version}")
             return env
-        if self.config["use_venv"]:
+        if self.config["python.use_venv"]:
             if self.project_config.get("python.path") and not os.getenv(
                 "PDM_IGNORE_SAVED_PYTHON"
             ):
@@ -68,7 +68,7 @@ class Project(PdmProject):
             else:
                 # Create a virtualenv using the selected Python interpreter
                 self.core.ui.echo(
-                    "use_venv is on, creating a virtualenv for this project...",
+                    "python.use_venv is on, creating a virtualenv for this project...",
                     fg="yellow",
                     err=True,
                 )
