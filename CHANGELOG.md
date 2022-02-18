@@ -1,6 +1,14 @@
 # Changelog
 
 <!-- insertion marker -->
+[v0.5.0](https://github.com/pdm-project/pdm-venv/releases/tag/0.5.0) (2022-02-18)
+---------------------------------------------------------------------------------
+
+### Features & Improvements
+
+- Update the plugin to support PDM>=1.13.0. [#35](https://github.com/pdm-project/pdm-venv/issues/35)
+
+
 [v0.4.1](https://github.com/pdm-project/pdm-venv/releases/tag/0.4.1) (2022-01-29)
 ---------------------------------------------------------------------------------
 
