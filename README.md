@@ -42,7 +42,7 @@ Note that `pdm-venv` must be installed to the same environment as `pdm`.
 ## Usage
 
 `pdm-venv` enhances `pdm`'s CLI with the support of virtualenv creation and management. With `pdm-venv` installed,
-the default value of `use_venv` will turn to `True`, you can disable the whole plugin by `pdm config use_venv false`.
+the default value of `python.use_venv` will turn to `True`, you can disable the whole plugin by `pdm config python.use_venv false`.
 
 ### Create a virtualenv
 
