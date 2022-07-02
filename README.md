@@ -7,6 +7,11 @@
 
 A plugin for pdm that enables virtualenv management
 
+## Project Deprecation
+
+venv support will be integrated into the `pdm` after `2.0.0`. This project is not necessary and won't be maintained anymore.
+The last version of PDM it supports is `1.15`.
+
 ## Requirements
 
 pdm-venv requires Python>=3.7

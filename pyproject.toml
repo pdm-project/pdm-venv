@@ -4,7 +4,7 @@ build-backend = "pdm.pep517.api"
 
 [project]
 name = "pdm-venv"
-description = "A plugin for pdm that enables virtualenv management"
+description = "(Deprecated)A plugin for pdm that enables virtualenv management"
 authors = [
     {name = "Frost Ming", email = "mianghong@gmail.com"}
 ]
@@ -13,7 +13,6 @@ readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [
     "virtualenv>=20.4",
-    "pdm>=1.13.0",
     "platformdirs>=2.4",
 ]
 
@@ -42,10 +41,11 @@ doc = [
 
 [project.entry-points.pdm]
 venv = "pdm_venv.plugin:entry_point"
-
 [tool.pdm]
+version = {source = "scm"}
+
+[tool.pdm.build]
 package-dir = "src"
-version = {use_scm = true}
 
 [tool.pdm.scripts]
 release = "python -m tasks.release"
