@@ -90,7 +90,7 @@ class Backend(abc.ABC):
 class VirtualenvBackend(Backend):
     def perform_create(self, location: Path, args: Tuple[str] = ()) -> Path:
         cmd = [sys.executable, "-m", "virtualenv", str(location)]
-        cmd.extend(["-p", self._resolved_interpreter.executable])
+        cmd.extend(["-p", str(self._resolved_interpreter.executable)])
         cmd.extend(args)
         self.subprocess_call(cmd)
 
@@ -98,7 +98,7 @@ class VirtualenvBackend(Backend):
 class VenvBackend(VirtualenvBackend):
     def perform_create(self, location: Path, args: Tuple[str]) -> Path:
         cmd = [
-            self._resolved_interpreter.executable,
+            str(self._resolved_interpreter.executable),
             "-m",
             "venv",
             str(location),
